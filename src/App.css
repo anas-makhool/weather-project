@@ -84,3 +84,6 @@ body{
   font-weight: 700;
 }
  
+.language-transition {
+  transition: margin-right 0.5s, margin-left 0.5s, padding-right 0.5s, padding-left 0.5s;
+}

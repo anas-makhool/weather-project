@@ -1,6 +1,6 @@
 import "./App.css";
 // React
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect } from "react";
 
 // Material UI
 import Container from "@mui/material/Container";
@@ -24,7 +24,7 @@ const theme = createTheme({
 function App() {
   const { t, i18n } = useTranslation();
   console.log(t("hello world"));
-  moment.locale("ar"); // fro date and time
+
   const centerFlex = {
     display: "flex",
     alignItems: "center",
@@ -37,25 +37,28 @@ function App() {
     maxTemp: 0,
     description: "",
     icon: "",
-    countryName:''
+    countryName: "",
   });
   const [timeAndDate, setTimeAndDate] = useState("");
-  const [local, setLocal] = useState("ar");
+  const [local, setLocal] = useState(window.localStorage.getItem("i18nextLng"));
   //=== States === //
 
   // Event Handlers
   const handleLanguageClick = () => {
     if (local === "en") {
       setLocal("ar");
-      moment.locale("ar")
-      i18n.changeLanguage("ar")
+      moment.locale("ar");
+      i18n.changeLanguage("ar");
     } else {
       setLocal("en");
-      moment.locale("en")
-      i18n.changeLanguage("en")
+      moment.locale("en");
+      i18n.changeLanguage("en");
     }
     setTimeAndDate(moment().format("dddd DD MM YYYY"));
   };
+
+  moment.locale(local); // fro date and time
+
   //==== Event Handlers ===
 
   const weatherData =
@@ -74,14 +77,14 @@ function App() {
         }),
       })
       .then((response) => {
-        console.log(response)
+        console.log(response);
         setTemp({
           currentTemp: Math.round(response.data.main.temp - 273.15),
           minTemp: Math.round(response.data.main.temp_min - 273.15),
           maxTemp: Math.round(response.data.main.temp_max - 273.15),
           description: response.data.weather[0].description,
           icon: `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
-          countryName:response.data.name
+          countryName: response.data.name,
         });
       })
       .catch((error) => console.log(error));
@@ -95,7 +98,7 @@ function App() {
   //
 
   return (
-    <div className="App">
+    <div className="App" >
       <ThemeProvider theme={theme}>
         <Container maxWidth="sm">
           {/* Content Container */}
@@ -119,7 +122,7 @@ function App() {
                     alignItems: "flex-end",
                     justifyContent: "flex-start",
                   }}
-                  dir="rtl">
+                  dir={local === "ar" ? "rtl" : "ltr"}>
                   <Typography
                     variant="h2"
                     style={{ marginRight: "20px", fontWeight: "600" }}>
@@ -136,7 +139,8 @@ function App() {
                 {/* Degree & Description */}
 
                 <div
-                  dir="rtl"
+                
+                  dir={local === "ar" ? "rtl" : "ltr"}
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -176,8 +180,8 @@ function App() {
                     </div>
                   </div>
                   <div className="icon-weather">
-                    <CloudIcon sx={{ fontSize: "200px", color: "white" }} />
-                    {/* <img id="wicon" src={temp.icon} alt="Weather icon" style={{width:"200px"}}></img> */}
+                    {/* <CloudIcon sx={{ fontSize: "200px", color: "white" }} /> */}
+                    <img id="wicon2" src={temp.icon} alt="Weather icon" style={{width:"200px"}}></img>
                   </div>
                 </div>
 
@@ -189,7 +193,7 @@ function App() {
             {/*== Card ==*/}
 
             <div
-              dir="rtl"
+            dir="rtl"
               style={{
                 width: "100%",
                 display: "flex",
